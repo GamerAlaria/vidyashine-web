@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useParams, Navigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Terminal, X, Calendar, Menu, Mail, Copy, ExternalLink, Check, AlertTriangle } from 'lucide-react';
+import { ArrowRight, Terminal, X, Calendar, Menu, Mail, Copy, ExternalLink, Check } from 'lucide-react';
 import blogData from './data/blogData';
 import './index.css';
 
@@ -27,11 +27,11 @@ const BookingModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
   /** Rate-limit: track last successful submission time */
   const lastSubmitRef = useRef(0);
   const COOLDOWN_MS = 60_000; // 60-second cooldown between submissions
+
+  if (!isOpen) return null;
 
   const handleBook = async (e) => {
     e.preventDefault();
@@ -105,19 +105,7 @@ const BookingModal = ({ isOpen, onClose }) => {
         <button onClick={onClose} className="absolute top-4 right-4 md:right-4 z-10 text-primary/60 hover:text-primary transition-colors">
           <X className="w-6 h-6" />
         </button>
-        {!IS_BOOKING_ENABLED ? (
-          /* Booking system unconfigured — show maintenance notice */
-          <div className="p-16 text-center flex flex-col items-center w-full justify-center">
-            <div className="w-16 h-16 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mb-6">
-              <AlertTriangle className="w-8 h-8" />
-            </div>
-            <h3 className="font-heading font-bold text-2xl mb-4 text-primary">Booking Unavailable</h3>
-            <p className="font-data text-primary/60 max-w-md text-sm leading-relaxed mb-8">
-              Our booking system is currently being set up. Please check back shortly or contact us directly.
-            </p>
-            <button onClick={onClose} className="px-6 py-3 border border-primary/20 rounded-full font-data text-sm hover:bg-primary/10 transition-colors text-primary uppercase tracking-widest font-bold">Close</button>
-          </div>
-        ) : step === 1 ? (
+        {step === 1 ? (
           <>
             <div className="p-8 md:p-12 md:w-1/2 border-b md:border-b-0 md:border-r border-primary/10">
               <h3 className="font-heading font-bold text-2xl mb-2 text-primary">Select a Date</h3>
@@ -764,9 +752,9 @@ const Hero = ({ onOpenModal, onOpenCancelModal }) => {
           </div>
 
           {/* Right — Brief coaching info (interactive) */}
-          <div className="hero-reveal lg:w-[340px] xl:w-[380px] shrink-0 bg-[#EFF6FF]/80 backdrop-blur-md border border-accent/15 rounded-2xl p-6 md:p-7 shadow-[0_8px_30px_rgba(37,99,235,0.08)] group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(37,99,235,0.15)] hover:border-accent/30 animate-float will-change-transform cursor-default">
+          <div className="lg:w-[340px] xl:w-[380px] shrink-0 bg-[#EFF6FF]/80 backdrop-blur-md border border-accent/15 rounded-2xl p-6 md:p-7 shadow-[0_8px_30px_rgba(37,99,235,0.08)] group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(37,99,235,0.15)] hover:border-accent/30 cursor-default">
             {/* Shimmer sweep on hover */}
-            <div className="absolute inset-0 -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-[1.5s] ease-in-out bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-10" />
+            <div className="absolute inset-0 -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-[1.5s] ease-in-out bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none z-10" />
             {/* Top accent glow */}
             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
 
@@ -775,7 +763,7 @@ const Hero = ({ onOpenModal, onOpenCancelModal }) => {
                 <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                 Who We Are
               </h3>
-              <p className="font-heading text-[15px] md:text-base text-primary/80 leading-relaxed mb-5 group-hover:text-primary transition-colors duration-300">
+              <p className="font-heading text-[15px] md:text-base text-primary font-medium leading-relaxed mb-5 transition-colors duration-300">
                 Vidyashine Academy offers expert coaching for <span className="font-bold text-primary">Classes VI – XII</span> with CBSE-aligned curriculum and structured test series.
               </p>
               <div className="flex flex-wrap gap-2 mb-5">
@@ -789,7 +777,7 @@ const Hero = ({ onOpenModal, onOpenCancelModal }) => {
                   </span>
                 ))}
               </div>
-              <p className="font-data text-xs text-primary/50 leading-relaxed group-hover:text-primary/70 transition-colors duration-300">
+              <p className="font-data text-xs text-primary/80 leading-relaxed transition-colors duration-300">
                 3 campus locations in Noida · Small-batch mentorship · Weekly diagnostic testing · Dedicated doubt-clearing sessions
               </p>
             </div>
