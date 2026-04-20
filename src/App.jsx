@@ -546,8 +546,8 @@ const HeroCanvas = () => {
         y: rand(0, height),
         vx: rand(-0.25, 0.25),
         vy: rand(-0.25, 0.25),
-        r: rand(1.5, 3),
-        opacity: rand(0.5, 0.9),
+        r: rand(3, 6), // Increased size
+        opacity: rand(0.8, 1), // Made darker/more opaque
       }));
     };
 
@@ -604,7 +604,7 @@ const HeroCanvas = () => {
         // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(10,22,40,${Math.min(p.opacity * 1.5, 1)})`;
+        ctx.fillStyle = `rgba(10,22,40,${p.opacity})`; // Solid dark blue
         ctx.fill();
       });
 
@@ -621,7 +621,7 @@ const HeroCanvas = () => {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(10,22,40,${0.3 * (1 - d / MAX_DIST)})`;
+            ctx.strokeStyle = `rgba(10,22,40,${0.5 * (1 - d / MAX_DIST)})`; // Made connecting lines slightly darker to match
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -1074,7 +1074,7 @@ const Curriculum = () => {
             <p className="font-data text-primary/60 text-sm leading-relaxed mb-8">
               Syllabus structuring strictly aligned with <span className="text-accent font-bold">CBSE 2025-26</span> guidelines. Our pedagogy guarantees comprehensive coverage and strategic review cycles.
             </p>
-            <button className="magnetic-button group bg-accent text-white px-8 py-4 rounded-full font-heading font-bold uppercase tracking-wide flex items-center justify-between w-full shadow-[0_0_20px_rgba(37,99,235,0.25)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
+            <button onClick={() => document.getElementById('curriculum-cards')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="inline-flex group bg-accent text-white px-8 py-4 rounded-full font-heading font-bold uppercase tracking-wide items-center justify-between w-full shadow-[0_0_20px_rgba(37,99,235,0.25)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
               <span>Explore Programs</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -1082,7 +1082,7 @@ const Curriculum = () => {
         </div>
 
         {/* Right: Horizontal Scrolling Cards */}
-        <div className="w-full lg:w-2/3 flex overflow-x-auto gap-6 pb-8 pt-4 px-4 -mx-4 snap-x snap-mandatory default-scrollbar" style={{ scrollBehavior: 'smooth' }}>
+        <div id="curriculum-cards" className="w-full lg:w-2/3 flex overflow-x-auto gap-6 pb-8 pt-4 px-4 -mx-4 snap-x snap-mandatory default-scrollbar" style={{ scrollBehavior: 'smooth' }}>
           {classesData.map((cls, idx) => (
             <div
               key={cls.id}
@@ -2174,10 +2174,84 @@ const Stats = () => {
   );
 };
 
+const TopAchievers = ({ onOpenModal }) => {
+  return (
+    <section className="relative w-full py-24 md:py-32 flex items-center justify-center overflow-hidden bg-[#0A1628] border-y border-white/5">
+      {/* Background Glows */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-accent/10 to-transparent pointer-events-none"></div>
+      <div className="absolute -left-32 top-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div className="relative z-10 px-6 md:px-16 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-12">
+        {/* Left Content */}
+        <div className="w-full lg:w-5/12 flex flex-col items-start text-left">
+          <div className="font-data text-xs text-accent font-bold tracking-widest uppercase mb-5 px-5 py-2 bg-accent/10 rounded-full border border-accent/20 backdrop-blur-md shadow-lg inline-flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse block"></span>
+            Hall of Fame
+          </div>
+          <h2 className="font-heading font-black text-4xl md:text-5xl lg:text-6xl text-white tracking-tight mb-6 leading-tight drop-shadow-md">
+            Meet Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-400">Champions</span>
+          </h2>
+          <p className="font-data text-white/80 text-sm md:text-base leading-relaxed mb-8">
+            Our students consistently dominate competitive exams and board results. We don't just teach the syllabus; we build competitive resilience. Here is why parents and students choose Vidyashine:
+          </p>
+          
+          <ul className="flex flex-col gap-4 mb-10 w-full">
+            {[
+              "Proven track record of top rankers",
+              "Small batches for personalized attention",
+              "Data-driven weekly diagnostics",
+              "Concept-first pedagogy over rote learning"
+            ].map((reason, idx) => (
+              <li key={idx} className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                  <svg className="w-3 h-3 text-accent" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="font-data text-white/90 text-sm md:text-base font-medium">{reason}</span>
+              </li>
+            ))}
+          </ul>
+
+          <Link to="/toppers" className="inline-flex group bg-accent text-white px-8 py-4 rounded-full font-heading font-bold uppercase tracking-wide items-center gap-3 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-shadow">
+            <span>View All Toppers</span>
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+
+        {/* Right Image Grid */}
+        <div className="w-full lg:w-7/12 grid grid-cols-2 gap-4 md:gap-6 relative">
+          <div className="flex flex-col gap-4 md:gap-6 mt-8 md:mt-16">
+            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl group relative bg-[#DBEAFE]">
+              <img src="/7.png" alt="Top Achiever 1" className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            </div>
+            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl group relative bg-[#DBEAFE]">
+              <img src="/9.jpeg" alt="Top Achiever 2" className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 md:gap-6">
+            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl group relative bg-[#DBEAFE]">
+              <img src="/8.png" alt="Top Achiever 3" className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            </div>
+            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl group relative bg-[#DBEAFE]">
+              <img src="/10.png" alt="Top Achiever 4" className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const HomePage = ({ onOpenModal, onOpenCancelModal }) => (
   <>
     <Hero onOpenModal={onOpenModal} onOpenCancelModal={onOpenCancelModal} />
     <Stats />
+    <TopAchievers onOpenModal={onOpenModal} />
     <Features />
     <Philosophy />
     <Protocol />
@@ -2475,6 +2549,79 @@ const BlogArticle = () => {
   );
 };
 
+const ToppersPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const [activeTab, setActiveTab] = useState('2025-26');
+  
+  const batches = [
+    { year: '2025-26', label: '2025-26 Batch' },
+    { year: '2024-25', label: '2024-25 Batch' },
+    { year: '2023-24', label: '2023-24 Batch' },
+  ];
+
+  // Placeholder images mapping
+  const images = {
+    '2025-26': ['/7.png', '/8.png', '/9.jpeg', '/10.png'],
+    '2024-25': [],
+    '2023-24': []
+  };
+
+  return (
+    <div className="w-full min-h-screen pt-32 pb-24 px-6 md:px-16 bg-white">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="font-heading font-black text-5xl md:text-7xl text-primary text-center mb-16 tracking-tight">
+          Meet Our <span className="text-accent">Champions</span>
+        </h1>
+        
+        {/* Tabs */}
+        <div className="flex flex-wrap justify-center gap-4 mb-16">
+          {batches.map(batch => (
+            <button 
+              key={batch.year}
+              onClick={() => setActiveTab(batch.year)}
+              className={`px-8 py-4 rounded-full font-heading font-bold uppercase tracking-widest text-sm transition-all duration-300 border-2 ${
+                activeTab === batch.year 
+                  ? 'bg-accent border-accent text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' 
+                  : 'bg-transparent border-primary/10 text-primary hover:border-accent/50 hover:text-accent'
+              }`}
+            >
+              {batch.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="w-full">
+          {images[activeTab]?.length > 0 ? (
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+               {images[activeTab].map((src, idx) => (
+                 <div key={idx} className="bg-[#DBEAFE] rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgba(37,99,235,0.06)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.12)] border border-primary/5 hover:border-accent/20 transition-all duration-500 group relative">
+                   <div className="aspect-[3/4] relative overflow-hidden p-6">
+                     <img src={src} alt={`Topper ${idx}`} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.03]" />
+                   </div>
+                 </div>
+               ))}
+             </div>
+          ) : (
+            <div className="text-center py-24 bg-[#F8FAFC] rounded-[3rem] border border-primary/10 shadow-sm">
+               <div className="w-20 h-20 bg-accent/10 text-accent rounded-full flex items-center justify-center mx-auto mb-6">
+                 <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                 </svg>
+               </div>
+               <h3 className="font-heading font-bold text-2xl text-primary mb-2">Images Uploading Soon</h3>
+               <p className="font-data text-primary/60">The toppers for the {activeTab} batch will be displayed here once available.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -2505,6 +2652,7 @@ const App = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogArticle />} />
+            <Route path="/toppers" element={<ToppersPage />} />
             {/* Placeholder routes for the rest to keep nav working */}
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/reach-us" element={<ReachUsPage />} />
